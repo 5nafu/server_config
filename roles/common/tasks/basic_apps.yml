@@ -30,6 +30,7 @@
     - postfix
     - multitail
     - mc
+    - molly-guard
 
 - name: Remove harmful / unneeded
   apt: name={{ item }} state=absent

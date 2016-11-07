@@ -1,7 +1,0 @@
----
-- hosts: local:!datacenter
-  roles:
-    - common
-    - workstation
-    - hypervisor
-    - nas_client

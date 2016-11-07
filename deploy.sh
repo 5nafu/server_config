@@ -7,8 +7,8 @@ git pull
 
 echo "Installing predependencies"
 # Install predependencies Manually
-ansible datacenter  --vault-password-file ./password.txt  -a "apt-get install -y python facter"
+ansible all  --vault-password-file ./password.txt  -a "apt-get install -y python facter" $@
 
 echo "running playbook"
 # Run playbook.
-ansible-playbook datacenter.yml --vault-password-file ./password.txt $@
+ansible-playbook all.yml --vault-password-file ./password.txt $@

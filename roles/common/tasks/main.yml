@@ -1,7 +1,11 @@
 # Common Tasks
 
 - include: basic_apps.yml
-- include: ntp.yml
-- include: security.yml
-- include: sudoers.yml
 - include: unattended-upgrades.yml
+- include: hostname.yml
+- include: ntp.yml
+- include: fail2ban.yml
+- include: security.yml
+- include: rkhunter.yml
+- include: user.yml
+- include: sudoers.yml
