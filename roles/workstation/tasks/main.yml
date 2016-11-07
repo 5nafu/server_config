@@ -1,7 +1,0 @@
-# Workstation Tasks
-
-- include: terminology.yml
-- include: google_chrome.yml
-- include: basic_apps.yml
-- include: atom.yml
-- include: xnview.yml

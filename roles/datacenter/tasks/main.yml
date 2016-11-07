@@ -1,7 +1,0 @@
-# Datacenter Tasks
-
-- include: basic_apps.yml
-- include: fail2ban.yml
-- include: hostname.yml
-- include: rkhunter.yml
-- include: user.yml

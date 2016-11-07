@@ -1,8 +1,0 @@
-# Router Tasks
-
-- include: basic_apps.yml
-- include: mklvol.yml
-- include: apt-mirror.yml
-- include: tor.yml
-- include: freenet.yml
-- include: i2p.yml
