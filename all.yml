@@ -1,6 +1,5 @@
 ---
 - hosts: all
-  gather_facts: yes
   become: true
   roles:
       - common
@@ -16,3 +15,6 @@
 - hosts: hypervisor
   roles:
     - hypervisor
+- hosts: froxlor
+  roles:
+    - froxlor
