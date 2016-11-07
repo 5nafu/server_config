@@ -1,17 +1,20 @@
-[datacenter]
+[datacenter:children]
 hypervisor
 monitoring
 guests
 mailserver
 
+[datacenter:vars]
+ansible_become=true
+
 [hypervisor]
 visor.tvollmer.de ansible_become=true
 
 [guests]
-srv.tvollmer.de ansible_become=true
+srv.tvollmer.de ansible_ssh_host=78.46.205.62
 
 [mailserver]
-srv.tvollmer.de ansible_become=true
+srv.tvollmer.de
 
 [monitoring]
 monitor ansible_ssh_host=78.46.205.62
