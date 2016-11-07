@@ -49,11 +49,11 @@
 - name: whitelist scripts
   lineinfile: dest=/etc/rkhunter.conf state=present line='{{ item }}'
   with_items:
-    - SCRIPTWHITELIST='/bin/egrep'
-    - SCRIPTWHITELIST='/bin/fgrep'
-    - SCRIPTWHITELIST='/bin/which'
-    - SCRIPTWHITELIST='/usr/bin/groups'
-    - SCRIPTWHITELIST='/usr/bin/ldd'
-    - SCRIPTWHITELIST='/usr/sbin/adduser'
-    #- SCRIPTWHITELIST='/usr/bin/lwp-request'
-    #- SCRIPTWHITELIST='/usr/sbin/prelink'
+    - SCRIPTWHITELIST=/bin/egrep
+    - SCRIPTWHITELIST=/bin/fgrep
+    - SCRIPTWHITELIST=/bin/which
+    - SCRIPTWHITELIST=/usr/bin/groups
+    - SCRIPTWHITELIST=/usr/bin/ldd
+    - SCRIPTWHITELIST=/usr/sbin/adduser
+    #- SCRIPTWHITELIST=/usr/bin/lwp-request
+    #- SCRIPTWHITELIST=/usr/sbin/prelink
