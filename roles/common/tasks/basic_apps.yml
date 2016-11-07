@@ -4,6 +4,7 @@
 - name: Install common software
   apt: name={{ item }} state=present
   with_items:
+    - facter
     - vim
     - git
     - htop
@@ -31,6 +32,7 @@
     - multitail
     - mc
     - molly-guard
+    - libwww-perl
 
 - name: Remove harmful / unneeded
   apt: name={{ item }} state=absent
