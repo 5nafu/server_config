@@ -1,0 +1,39 @@
+- name: Check if .my.cnf file already exists.
+  stat: "path=/root/.my.cnf"
+  register: mycnf_file
+
+- name: preseed phpmyadmin
+  debconf:
+    name: phpmyadmin
+    question: phpmyadmin/{{ item.question }}
+    vtype: {{ item.vtype }}
+    value: {{ item.value }}
+  with_items:
+    - { question: reconfigure-webserver, vtype: multiselect, value: apache2 }
+    - { question: mysql/admin-pass, vtype: password, value: "{{ mysql_root_password }}" }
+  when: mycnf_file.stat.exists == false
+
+- name: preseed mysql
+  debconf:
+    name: mysql-server-5.5
+    question: mysql-server/{{ item }}
+    vtype: password
+    value: {{ mysql_root_password }}
+  with_items:
+    - root_password
+    - root_password_again
+  when: mycnf_file.stat.exists == false
+
+- name: apache2 and mysql
+  apt: pkg={{ item }} install_recommends=no state=present
+  with_items:
+    - apache2
+    - libapache2-mod-php5
+    - mysql-server
+    - phpmyadmin
+    - php5-gd
+    - php5-imap
+    - php5-curl
+
+- name: setup .my.conf
+  template: src=my.cnf dest=/root/.my.cnf owner=root mode=0600
