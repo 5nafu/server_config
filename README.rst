@@ -37,7 +37,7 @@ If during developement one needs to change (or look at) vault files this command
 
 Similarly the file can be reencrypted after a change::
 
-  ansible-vault decrypt --vault-password-file=password.txt path/to/vaultfile
+  ansible-vault encrypt --vault-password-file=password.txt path/to/vaultfile
 
 Please note that reencryption will change the encrypted file,
 even if nothing changed in the decrypted version.
