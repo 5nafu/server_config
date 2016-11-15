@@ -1,4 +1,5 @@
-fail2ban_destemail: "fail2ban@blocklist.de"
+# fail2ban_destemail: "fail2ban@blocklist.de"
+fail2ban_destemail: "info@tvollmer.de"
 fail2ban_sendermail: "fail2ban@foto23.com"
 fail2ban_blocklist_de_apikey: "XXXXXXXX"
 fail2ban_jail_apache: 'false'
