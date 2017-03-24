@@ -35,9 +35,9 @@ Vaults
 
 Some values should not be visible to the public. For these ansible allows for encrypted files (and single values).
 
-In this repository, a `script <blob/master/bin/open_the_vault.sh>`_ and a `gpg-rencrypted passphrase <blob/master/vault_passphrase.gpg>`_ is used.
+In this repository, a `script <bin/open_the_vault.sh>`_ and a `gpg-rencrypted passphrase <vault_passphrase.gpg>`_ is used.
 
-  **As the script is called via a variable in the `ansible.cfg <blob/master/ansible.cfg>`_, all ansible commands need to be run from the top of this git repository!**
+  **As the script is called via a variable in the `ansible.cfg <ansible.cfg>`_, all ansible commands need to be run from the top of this git repository!**
 
 Decrypting vaults
 ~~~~~~~~~~~~~~~~~
