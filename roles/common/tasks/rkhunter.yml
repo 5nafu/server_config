@@ -13,7 +13,7 @@
     - { name: 'RUN_CHECK_ON_BATTERY', set_to: 'false' }
 
 - name: set config values
-  replace: dest=/etc/rkhunter.conf regexp='^.*({{ item.name }}).*$' replace='\1="{{ item.set_to }}"'
+  replace: dest=/etc/rkhunter.conf regexp='^#*({{ item.name }}).*$' replace='\1="{{ item.set_to }}"'
   with_items:
     - { name: 'ALLOW_SSH_PROT_V1', set_to: '0' }
     - { name: 'ALLOW_SSH_ROOT_USER', set_to: '{{ sshd_permit_root_login}}' }
