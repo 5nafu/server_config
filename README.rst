@@ -1,5 +1,6 @@
 Server config
 =============
+
 Configure all our servers with ansible.
 
 Dependencies
@@ -30,7 +31,7 @@ One can test the configuration with vagrant.
 
 
 Vaults
-++++++
+-------
 
 Some values should not be visible to the public. For these ansible allows for encrypted files (and single values).
 
