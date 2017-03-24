@@ -31,7 +31,7 @@
     - { name: 'LOCK_TIMEOUT', set_to: '300' }
     - { name: 'LOGFILE', set_to: '/var/log/rkhunter.log' }
     - { name: 'MAIL_CMD', set_to: 'mail -s "[rkhunter] Warnings found for ${HOST_NAME}"' }
-    - { name: 'MAIL-ON-WARNING', set_to: '' }
+    - { name: 'MAIL-ON-WARNING', set_to: '{{ rkhunter_email }}' }
     - { name: 'MIRRORS_MODE', set_to: '0' }
     - { name: 'PHALANX2_DIRTEST', set_to: '0' }
     - { name: 'ROTATE_MIRRORS', set_to: '1' }

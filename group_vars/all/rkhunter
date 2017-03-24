@@ -1,0 +1,2 @@
+---
+rkhunter_email: "{{ vault.rkhunter_email }}"
