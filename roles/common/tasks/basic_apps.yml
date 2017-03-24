@@ -23,7 +23,6 @@
     - iputils-tracepath
     - tree
     - zsh
-    - facter
     - apt-transport-https
     - ca-certificates
     - locate
