@@ -19,7 +19,6 @@ Vagrant.configure(2) do |config|
     }
     ansible.playbook = "all.yml"
     ansible.raw_arguments = [
-      "--vault-password-file=./password.txt",
       "-b",
       "--become-user=root"
     ]
