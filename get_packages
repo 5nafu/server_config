@@ -1,0 +1,18 @@
+#!/bin/bash
+
+package=$1
+
+
+if [ -z "$package" ]; then
+  for package in $(dpkg -l |grep "^ii" | awk '{print $2}'); do
+    if ! apt-cache rdepends --installed --no-recommends $package | grep "^ "| grep -qv "^    "; then
+        echo $package; 
+    fi
+  done
+else
+  apt-cache rdepends --installed --no-recommends $package | grep "^ "| grep -v "^    ";
+fi
+# Get reverse dependncies
+#for requires in $(apt-cache rdepends $package | grep "^ " |grep -v "^    "| sed 's/|/ /' |sort |uniq |xargs); do
+#  if dpkg -s $requires >/dev/null 2>&1; then
+#    echo -n $package; echo -n ": $requires" >&2;echo ""; break
