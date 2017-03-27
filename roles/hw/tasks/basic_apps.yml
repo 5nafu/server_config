@@ -1,7 +1,7 @@
-- name: Install common software 
+- name: Install common software
   apt: name={{ item }} state=present
   with_items:
+    - hdparm
     - lm-sensors
     - mdadm
     - smartmontools
-
