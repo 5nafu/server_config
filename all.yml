@@ -3,6 +3,7 @@
   become: true
   roles:
       - common
+      - { role: 'iptables', tags: 'iptables' }
 
 - hosts: datacenter
   roles:
