@@ -8,3 +8,12 @@ Unattended-Upgrade::Package-Blacklist {
 };
 Unattended-Upgrade::MinimalSteps "true";
 Unattended-Upgrade::Mail "{{ unattendedupgrade_mail }}";
+APT {
+  Periodic {
+    Update-Package-Lists "1";
+    Download-Upgradeable-Packages "0";
+    Unattended-Upgrade "1";
+    AutocleanInterval "21";
+    Verbose "1";
+  };
+};
