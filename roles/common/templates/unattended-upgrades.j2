@@ -1,0 +1,22 @@
+Unattended-Upgrade {
+  Origins-Pattern {
+    "o=Debian,a=${distro_codename}";
+    "o=Debian,a=${distro_codename}-updates";
+    "o=Debian,a=${distro_codename}-backports";
+    "origin=Debian,archive=${distro_codename},label=Debian-Security";
+    "o=Bloonix";
+  };
+  Package-Blacklist {
+  };
+  MinimalSteps "true";
+  Mail "{{ unattendedupgrade_mail }}";
+};
+APT {
+  Periodic {
+    Update-Package-Lists "1";
+    Download-Upgradeable-Packages "0";
+    Unattended-Upgrade "1";
+    AutocleanInterval "21";
+    Verbose "1";
+  };
+};

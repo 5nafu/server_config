@@ -4,34 +4,46 @@
 - name: Install common software
   apt: name={{ item }} state=present
   with_items:
-    - facter
-    - vim
-    - git
-    - htop
-    - subversion
-    - tmux
-    - sudo
-    - hdparm
-    - iotop
-    - mtr
-    - nmap
-    - ntpdate
-    - tcpdump
-    - netcat-openbsd
-    - ethtool
-    - mawk
-    - iputils-tracepath
-    - tree
-    - zsh
+    - apt-rdepends
     - apt-transport-https
+    - at
+    - bash-completion
     - ca-certificates
+    - ethtool
+    - facter
+    - git
+    - hdparm
+    - heirloom-mailx
+    - haveged
+    - htop
+    - iotop
+    - iputils-tracepath
+    - libwww-perl
     - locate
-    - telnet
-    - postfix
-    - multitail
+    - mawk
     - mc
     - molly-guard
-    - libwww-perl
+    - multitail
+    - mtr
+    - netcat-openbsd
+    - net-tools
+    - nmap
+    - ntpdate
+    - openssh-blacklist
+    - openssh-blacklist-extra
+    - postfix
+    - psmisc
+    - subversion
+    - sudo
+    - tcpdump
+    - telnet
+    - time
+    - tmux
+    - tree
+    - vim
+    - w3m
+    - whois
+    - zsh
 
 - name: Remove harmful / unneeded
   apt: name={{ item }} state=absent

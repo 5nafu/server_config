@@ -3,12 +3,12 @@
 #file_to_disk = './tmp/large_disk.vdi' (Additional Disk)
 
 Vagrant.configure(2) do |config|
-  #config.vm.box = "~/xenial_with_LVM_extra_space.box"
-  #config.vm.box = "gbarbieru/xenial"
-  config.vm.box = "debian/jessie64"
+  #config.vm.box = "debian/jessie64" <- Upstream
+  config.vm.box = "kaorimatz/debian-8.6-amd64"
+  config.vbguest.auto_update = false
 
   # Configuration deployment
-  config.vm.provision "preinstall", type: "shell", inline: "sudo apt-get -y install facter python"
+  config.vm.provision "preinstall", type: "shell", inline: "sudo apt-get update; sudo apt-get -y --no-install-recommends install facter python"
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
       "hypervisor" => ["visor"],

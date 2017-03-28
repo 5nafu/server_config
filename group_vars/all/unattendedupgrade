@@ -1,0 +1,2 @@
+---
+unattendedupgrade_mail: "{{ vault.unattendedupgrade_mail }}"
