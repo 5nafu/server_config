@@ -2,19 +2,20 @@
 - hosts: all
   become: true
   roles:
-      - common
+      - { role: 'common', tags: 'common' }
+      - { role: 'iptables', tags: 'iptables' }
 
 - hosts: datacenter
   roles:
-    - { role: hw, when: facter_is_virtual == "false" }
-    - { role: monitoring-client, when: "'monitoring' not in group_names" }
-    - { role: postfix-satellite, when: "'mailserver' not in group_names" }
+    - { role: hw, when: facter_is_virtual == "false" , tags: 'hw'}
+    - { role: monitoring-client, when: "'monitoring' not in group_names", tags: 'monitoring-client'}
+    - { role: postfix-satellite, when: "'mailserver' not in group_names", tags: 'postfix-client'}
 - hosts: monitoring
   roles:
-    - monitoring-server
+    - { role: 'monitoring-server', tags: 'monitoring-server' }
 - hosts: hypervisor
   roles:
-    - hypervisor
+    - { role: 'hypervisor', tags: 'hypervisor' }
 - hosts: froxlor
   roles:
-    - froxlor
+    - { role: 'froxlor', tags: 'froxlor' }
