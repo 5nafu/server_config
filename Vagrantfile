@@ -8,7 +8,7 @@ Vagrant.configure(2) do |config|
   config.vbguest.auto_update = false
 
   # Configuration deployment
-  config.vm.provision "preinstall", type: "shell", inline: "sudo apt-get update; sudo apt-get -y install facter python"
+  config.vm.provision "preinstall", type: "shell", inline: "sudo apt-get update; sudo apt-get -y --no-install-recommends install facter python"
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
       "hypervisor" => ["visor"],
