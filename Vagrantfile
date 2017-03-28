@@ -5,6 +5,7 @@
 Vagrant.configure(2) do |config|
   #config.vm.box = "debian/jessie64" <- Upstream
   config.vm.box = "kaorimatz/debian-8.6-amd64"
+  config.vbguest.auto_update = false
 
   # Configuration deployment
   config.vm.provision "preinstall", type: "shell", inline: "sudo apt-get update; sudo apt-get -y install facter python"
