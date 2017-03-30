@@ -13,7 +13,7 @@
     - bloonix-plugins-sensors
 
 - name: Add bloonix Server
-  replace: dest=/etc/bloonix/agent/main.conf regexp='@@SERVER@@' replace='monitor.tvollmer.de'
+  replace: dest=/etc/bloonix/agent/main.conf regexp='@@SERVER@@' replace='{{ bloonix_server }}'
 
 - name: Configure host_id
   replace: dest=/etc/bloonix/agent/main.conf regexp='^.*(# ENTER THE HOST ID)' replace="    host_id  {{bloonix_host_id}} \1"
