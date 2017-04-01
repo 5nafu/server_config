@@ -2,6 +2,11 @@
 # vi: set ft=ruby :
 #file_to_disk = './tmp/large_disk.vdi' (Additional Disk)
 
+hosts = {
+  "visor" => "192.168.33.10",
+  "srv" => "192.168.33.11"
+}
+
 Vagrant.configure(2) do |config|
   #config.vm.box = "debian/jessie64" <- Upstream
   config.vm.box = "kaorimatz/debian-8.6-amd64"
@@ -23,12 +28,11 @@ Vagrant.configure(2) do |config|
       "--become-user=root"
     ]
   end
-  config.vm.define 'visor' do |visor|
-    visor.vm.hostname = "visor.foto23.com"
-    visor.vm.network "private_network", ip: "192.168.33.10"
-  end
-  config.vm.define 'srv' do |srv|
-    srv.vm.hostname = "srv.foto23.com"
-    srv.vm.network "private_network", ip: "192.168.33.11"
+
+  hosts.each do |name, ip|
+    config.vm.define name do |machine|
+      machine.vm.hostname = "%s.foto23.com" % name
+      machine.vm.network :private_network, ip: ip
+    end
   end
 end
