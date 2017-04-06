@@ -20,13 +20,14 @@
 - name: Check if elasticsearch is initialised
   uri:
     url: http://localhost:9200/_template/template_bloonix
+    status_code: 200,404
     return_content: yes
   register: template_bloonix
 
 - name: initialize elasticsearch
   command: /srv/bloonix/webgui/schema/init-elasticsearch localhost:9200
   register: elasticsearch_init
-  when: template_bloonix.json == ""
+  when: template_bloonix.status == 404
   notify:
     - restart bloonix
 
