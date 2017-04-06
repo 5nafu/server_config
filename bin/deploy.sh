@@ -28,8 +28,9 @@ command -v ansible >/dev/null 2>&1 || {
   fi
 }
 
-# Go to Directory of script
+# Go to git root
 cd "$( dirname "${BASH_SOURCE[0]}" )"
+cd $(git rev-parse --show-toplevel)
 
 git pull
 
