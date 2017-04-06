@@ -1,6 +1,7 @@
 server {
-  listen 80 default_server;
-  listen [::]:80 default_server;
+  listen 80;
+  listen [::]:80;
+  server_name {{ ansible_fqdn }};
 
   root /var/www/html;
 
@@ -21,8 +22,8 @@ server {
 
 
 server {
-  listen 443 default_server;
-  server_name _;
+  listen 443;
+  server_name {{ ansible_fqdn }};
 
   access_log /var/log/nginx/bloonix-webgui.access.log;
   error_log /var/log/nginx/bloonix-webgui.error.log;
