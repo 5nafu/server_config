@@ -1,0 +1,28 @@
+- name: Check if .my.cnf file already exists.
+  stat: "path=/root/.my.cnf"
+  register: mycnf_file
+
+- name: preseed mysql
+  debconf:
+    name: mysql-server-5.5
+    question: "mysql-server/{{ item }}"
+    vtype: password
+    value: "{{ mysql_root_password }}"
+  with_items:
+    - root_password
+    - root_password_again
+  when: mycnf_file.stat.exists == false
+
+- name: mysql
+  apt:
+    pkg: mariadb-server
+    install_recommends: no
+    state: present
+
+- name: setup .my.conf
+  template: src=my.cnf dest=/root/.my.cnf owner=root mode=0600
+
+- name: Enable services
+  systemd:
+    enabled: yes
+    name: mysql

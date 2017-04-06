@@ -18,4 +18,5 @@
     - { role: 'hypervisor', tags: 'hypervisor' }
 - hosts: froxlor
   roles:
+    - { role: 'mysql', tags: 'froxlor' }
     - { role: 'froxlor', tags: 'froxlor' }
