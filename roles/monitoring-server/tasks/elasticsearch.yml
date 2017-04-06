@@ -7,11 +7,20 @@
 - name: Add elastic Key
   apt_key: url=https://artifacts.elastic.co/GPG-KEY-elasticsearch state=present
 
+- name: Install openjdk-8
+  apt:
+    name: openjdk-8-jre-headless
+    state: present
+    update_cache: yes
+    default_release: jessie-backports
+  notify:
+    - restart elasticsearch
+
 - name: Install Elasitcsearch
-  apt: name={{item}} state=present update_cache=yes
-  with_items:
-    - openjdk-8-jre-headless
-    - elasticsearch
+  apt:
+    name: elasticsearch
+    state: present
+    update_cache: yes
   notify:
     - restart elasticsearch
 
