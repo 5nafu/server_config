@@ -1,1 +1,3 @@
----
+- include: elasticsearch.yml
+- include: bloonix.yml
+- include: nginx.yml

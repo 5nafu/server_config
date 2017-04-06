@@ -12,6 +12,7 @@
     - { role: postfix-satellite, when: "'mailserver' not in group_names", tags: 'postfix-client'}
 - hosts: monitoring
   roles:
+    - { role: 'mysql', tags: 'monitoring-server' }
     - { role: 'monitoring-server', tags: 'monitoring-server' }
 - hosts: hypervisor
   roles:

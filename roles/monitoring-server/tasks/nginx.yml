@@ -1,0 +1,52 @@
+- name: install nginx
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Set nginx iptables
+  iptables_raw:
+    name: allow_nginx
+    weight: 50
+    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
+    state: present
+    rules: |
+      -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+      -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+
+- name: Enable services
+  systemd:
+    enabled: yes
+    name: nginx
+
+- name: install letsencrypt
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+    default_release: jessie-backports
+  with_items:
+    - letsencrypt
+    - python-certbot-nginx
+
+- name: check if letsencrypt ran already
+  stat:
+    path: /etc/letsencrypt/live/monitor.tvollmer.de/fullchain.pem
+  register: le_certfile
+
+- set_fact:
+    nginx_certificate_file: "/etc/letsencrypt/live/monitor.tvollmer.de/fullchain.pem; # managed by Certbot"
+    nginx_key_file: "/etc/letsencrypt/live/monitor.tvollmer.de/privkey.pem; # managed by Certbot"
+  when: le_certfile.stat.islnk is defined
+
+- set_fact:
+    nginx_certificate_file: "/etc/bloonix/webgui/pki/server.cert;"
+    nginx_key_file: "/etc/bloonix/webgui/pki/server.key;"
+  when: le_certfile.stat.islnk is not defined
+
+- name: setup nginx-virtual_server
+  template: src=nginx-server.conf.j2 dest=/etc/nginx/sites-available/default owner=root mode=0644
+
+- name: run LE-installer
+  command: "certbot run -n -a webroot --webroot-path=/var/www/html -d {{ansible_nodename}} --installer=nginx --agree-tos --email {{monitor_admin_email}}"
+  when: le_certfile.stat.islnk is not defined

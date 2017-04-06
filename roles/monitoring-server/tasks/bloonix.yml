@@ -1,0 +1,60 @@
+- name: Add bloonix Repository
+  apt_repository: repo='deb https://download.bloonix.de/repos/debian/ {{ ansible_lsb.codename }} main' state=present
+
+- name: Add bloonix Key
+  apt_key: url=https://download.bloonix.de/debian/bloonix.gpg state=present
+
+- name: Install Bloonix
+  apt: name={{item}} state=present update_cache=yes
+  with_items:
+    - mariadb-server
+    - bloonix-webgui
+    - bloonix-server
+    - bloonix-agent
+    - bloonix-plugins-basic
+    - bloonix-plugins-linux
+
+- name: Check if elasticsearch is initialised
+  uri:
+    url: http://localhost:9200/_template/template_bloonix
+    return_content: yes
+  register: template_bloonix
+
+- name: initialize elasticsearch
+  command: /srv/bloonix/webgui/schema/init-elasticsearch localhost:9200
+  register: elasticsearch_init
+  when: template_bloonix.json == ""
+  notify:
+    - restart bloonix
+
+- name: check if bloonix-db exists
+  shell: "mysql -e 'SHOW DATABASES;' | grep bloonix"
+  register: dbstatus
+  failed_when: "'ERROR' in dbstatus.stderr"
+
+- name: initialize mariadb-server
+  command: /srv/bloonix/webgui/schema/init-database --mysql
+  when: dbstatus.rc != 0
+
+- name: Install bloonix plugins
+  apt:
+    name: bloonix-plugin-config
+    state: present
+
+- name: Set bloonix iptables
+  iptables_raw:
+    name: allow_bloonix
+    weight: 50
+    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
+    state: present
+    rules: "-A INPUT -p tcp -m tcp --dport 5460 -j ACCEPT"
+
+- name: Enable services
+  systemd:
+    enabled: yes
+    name: "{{item}}"
+  with_items:
+      - bloonix-webgui
+      - bloonix-server
+      - bloonix-srvchk
+      - bloonix-agent

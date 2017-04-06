@@ -1,0 +1,29 @@
+- name: Add elastic Repository
+  apt_repository: repo='deb https://artifacts.elastic.co/packages/5.x/apt stable main' state=present
+
+- name: Add backports Repository
+  apt_repository: repo='deb http://ftp.de.debian.org/debian jessie-backports main' state=present
+
+- name: Add elastic Key
+  apt_key: url=https://artifacts.elastic.co/GPG-KEY-elasticsearch state=present
+
+- name: Install Elasitcsearch
+  apt: name={{item}} state=present update_cache=yes
+  with_items:
+    - openjdk-8-jre-headless
+    - elasticsearch
+  notify:
+    - restart elasticsearch
+
+- name: Patch the elasticsearch.yml for only local connections
+  lineinfile:
+    dest: /etc/elasticsearch/elasticsearch.yml
+    regexp: '^#*network.host:.*'
+    line: "network.host: _local_"
+  notify:
+    - restart elasticsearch
+
+- name: Patch the elasticsearch defaults for only low memory consumption
+  lineinfile: dest=/etc/default/elasticsearch regexp='^#*ES_JAVA_OPTS.*' line='ES_JAVA_OPTS="-Xms265M -Xmx265M"'
+  notify:
+    - restart elasticsearch

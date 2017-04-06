@@ -1,0 +1,16 @@
+- name: restart elasticsearch
+  systemd: name=elasticsearch state=restarted
+- name: restart nginx
+  systemd: name=nginx state=restarted
+
+- name: restart bloonix
+  systemd: name=bloonix-webgui state=restarted
+  notify: restart bloonix-server
+- name: restart bloonix-server
+  systemd: name=bloonix-server state=restarted
+  notify: restart bloonix-srvchk
+- name: restart bloonix-srvchk
+  systemd: name=bloonix-srvchk state=restarted
+  notify: restart bloonix-agent
+- name: restart bloonix-agent
+  systemd: name=bloonix-agent state=restarted
