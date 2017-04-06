@@ -1,4 +1,4 @@
-srv.tvollmer.de ansible_ssh_host=78.46.205.62
+monitor.tvollmer.de ansible_ssh_host=78.46.205.62
 
 [datacenter:children]
 hypervisor
@@ -22,4 +22,4 @@ srv.tvollmer.de
 srv.tvollmer.de
 
 [monitoring]
-#monitor ansible_ssh_host=78.46.205.62
+monitor.tvollmer.de
