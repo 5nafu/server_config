@@ -8,8 +8,8 @@ install_linux() {
             echo "deb http://ppa.launchpad.net/ansible/ansible/ubuntu trusty main" | sudo tee /etc/apt/sources.list.d/ansible-ubuntu-ansible-xenial.list
             sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 93C4A3FD7BB9C367
         fi
-        sudo apt-get update
-        sudo apt-get install -y ansible
+        sudo apt-get update -qq
+        sudo apt-get install -yqq ansible
     elif [ -f /etc/redhat-release ] ; then
         sudo yum install ansible
     else
