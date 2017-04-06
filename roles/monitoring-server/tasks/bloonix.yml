@@ -1,3 +1,6 @@
+- name: Restart all services in need of restart
+  meta: flush_handlers
+
 - name: Add bloonix Repository
   apt_repository: repo='deb https://download.bloonix.de/repos/debian/ {{ ansible_lsb.codename }} main' state=present
 
