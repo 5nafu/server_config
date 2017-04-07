@@ -34,12 +34,14 @@
     path: /etc/letsencrypt/live/monitor.tvollmer.de/fullchain.pem
   register: le_certfile
 
-- set_fact:
+- name: "set letsencrypt certificate in nginx config"
+  set_fact:
     nginx_certificate_file: "/etc/letsencrypt/live/monitor.tvollmer.de/fullchain.pem; # managed by Certbot"
     nginx_key_file: "/etc/letsencrypt/live/monitor.tvollmer.de/privkey.pem; # managed by Certbot"
   when: le_certfile.stat.islnk is defined
 
-- set_fact:
+- name: "set default certificate in nginx config"
+  set_fact:
     nginx_certificate_file: "/etc/bloonix/webgui/pki/server.cert;"
     nginx_key_file: "/etc/bloonix/webgui/pki/server.key;"
   when: le_certfile.stat.islnk is not defined
