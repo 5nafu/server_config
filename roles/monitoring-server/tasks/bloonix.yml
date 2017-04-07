@@ -35,6 +35,7 @@
   shell: "mysql -e 'SHOW DATABASES;' | grep bloonix"
   register: dbstatus
   failed_when: "'ERROR' in dbstatus.stderr"
+  changed_when: dbstatus.rc != 0
 
 - name: initialize mariadb-server
   command: /srv/bloonix/webgui/schema/init-database --mysql
