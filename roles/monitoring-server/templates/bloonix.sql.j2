@@ -1,0 +1,80 @@
+INSERT INTO `company`
+  (`id`, `company`, `email`, `host_reg_authkey`, `host_reg_enabled`, `host_reg_allow_from`, `variables`)
+VALUES
+  (2, 'saschakaupp.com', 'info@tvollmer.de', '{{bloonix_company_key}}', '1', 'all', '{}')
+ON DUPLICATE KEY UPDATE
+  company=VALUES(company),
+  email=VALUES(email),
+  host_reg_authkey=VALUES(host_reg_authkey),
+  host_reg_enabled=VALUES(host_reg_enabled),
+  host_reg_allow_from=VALUES(host_reg_allow_from),
+  variables=VALUES(variables);
+
+INSERT INTO `user`
+  (id, username, name, password_changed, manage_contacts, manage_templates, role, stash )
+VALUES
+  (1,'admin',           'Administrator','1','1','1','admin','{}'),
+  (2,'info@tvollmer.de','Snafu',        '1','1','1','admin','{}'),
+  (3,'h0uz3@foto23.com','h0uz3',        '1','1','1','admin','{}')
+ON DUPLICATE KEY UPDATE
+  id=VALUES(id),
+  username=VALUES(username),
+  name=VALUES(name),
+  password_changed=VALUES(password_changed),
+  manage_contacts=VALUES(manage_contacts),
+  manage_templates=VALUES(manage_templates),
+  role=VALUES(role),
+  stash=VALUES(stash);
+
+INSERT INTO `user_group`
+  (user_id, group_id, create_service, update_service, delete_service, create_host, update_host, delete_host)
+VALUES
+  (2,1,'1','1','1','1','1','1'),
+  (3,1,'1','1','1','1','1','1')
+ON DUPLICATE KEY UPDATE
+  user_id=VALUES(user_id),
+  group_id=VALUES(group_id),
+  create_service=VALUES(create_service),
+  update_service=VALUES(update_service),
+  delete_service=VALUES(delete_service),
+  create_host=VALUES(create_host),
+  update_host=VALUES(update_host),
+  delete_host=VALUES(delete_host);
+
+
+ALTER TABLE user_secret ADD PRIMARY KEY(user_id);
+
+INSERT INTO `user_secret`
+  (user_id, crypt_type, salt, rounds, password)
+VALUES
+  (
+    1,
+    '1',
+    '{{ vault.bloonix_default_passwords.admin.salt }}',
+    {{ vault.bloonix_default_passwords.admin.rounds }},
+    '{{ vault.bloonix_default_passwords.admin.password }}'
+  ),
+  (
+    2,
+    '1',
+    '{{ vault.bloonix_default_passwords.snafu.salt }}',
+    {{ vault.bloonix_default_passwords.snafu.rounds }},
+    '{{ vault.bloonix_default_passwords.snafu.password }}'
+  ),
+    (3,
+    '1',
+    '{{ vault.bloonix_default_passwords.h0uz3.salt }}',
+    {{ vault.bloonix_default_passwords.h0uz3.rounds }},
+    '{{ vault.bloonix_default_passwords.h0uz3.password }}'
+  )
+ON DUPLICATE KEY UPDATE
+  user_id=VALUES(user_id),
+  crypt_type=VALUES(crypt_type),
+  salt=VALUES(salt),
+  rounds=VALUES(rounds),
+  password=VALUES(password);
+
+
+create table `__ansible_configured` (
+  `configured` bool DEFAULT 1
+)

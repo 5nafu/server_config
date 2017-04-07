@@ -3,3 +3,5 @@ bloonix_host_id: 0
 bloonix_password: "secret"
 bloonix_active: "no"
 bloonix_server: "{{ vault.bloonix_server }}"
+bloonix_company_key: "{{ vault.bloonix_company_key }}"
+bloonix_default_passwords: "{{ vault.bloonix_default_passwords }}"

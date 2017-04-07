@@ -1,0 +1,25 @@
+- name: check if bloonix-db is configured
+  shell: 'mysql -e "show tables;" bloonix |grep -q __ansible_configured'
+  register: bloonix_configured_status
+  failed_when: "'ERROR' in bloonix_configured_status.stderr"
+  changed_when: bloonix_configured_status.rc != 0
+
+- block:
+  - name: install dependencies
+    apt:
+      name: python-mysqldb
+      state: present
+  - name: add bloonix configuration dump
+    template: src=bloonix.sql.j2 dest=/root/bloonix.sql owner=root mode=0600
+  - name: configure bloonix database
+    mysql_db:
+      name: bloonix
+      login_user: root
+      single_transaction: yes
+      target: /root/bloonix.sql
+      state: import
+  - name: remove bloonix configuration dump
+    file:
+      path: /root/bloonix.sql
+      state: absent
+  when: bloonix_configured_status.changed
