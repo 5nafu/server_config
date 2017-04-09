@@ -13,7 +13,8 @@
 - hosts: monitoring
   roles:
     - { role: 'mysql', tags: 'monitor' }
-    - { role: 'bloonix-monitoring-server', tags: 'monitor' }
+    - { role: 'icinga', tags: 'monitor' }
+#    - { role: 'bloonix-monitoring-server', tags: 'monitor' }
 - hosts: hypervisor
   roles:
     - { role: 'hypervisor', tags: 'hypervisor' }

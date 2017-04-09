@@ -3,8 +3,9 @@
 #file_to_disk = './tmp/large_disk.vdi' (Additional Disk)
 
 hosts = {
-  "visor" => "192.168.33.10",
-  "srv" => "192.168.33.11"
+  "visor.saschakaupp.com" => "192.168.33.10",
+  "srv.saschakaupp.com" => "192.168.33.11",
+  "monitor.tvollmer.de" => "192.168.33.12"
 }
 
 Vagrant.configure(2) do |config|
@@ -18,11 +19,11 @@ Vagrant.configure(2) do |config|
   config.vm.provision "preinstall", type: "shell", inline: "/vagrant/vagrant_preinstall.sh"
   config.vm.provision "ansible" do |ansible|
     ansible.groups = {
-      "hypervisor" => ["visor"],
-      "guest" => ["srv"],
-      "mailserver" => ["srv"],
-      "monitoring" => ["monitor"],
-      "datacenter" => ["visor","srv","monitor"],
+      "hypervisor" => ["visor.saschakaupp.com"],
+      "guest" => ["srv.saschakaupp.com"],
+      "mailserver" => ["srv.saschakaupp.com"],
+      "monitoring" => ["monitor.tvollmer.de"],
+      "datacenter" => ["visor.saschakaupp.com","srv.saschakaupp.com","monitor.tvollmer.de"],
     }
     ansible.playbook = "all.yml"
     ansible.raw_arguments = [
@@ -33,7 +34,7 @@ Vagrant.configure(2) do |config|
 
   hosts.each do |name, ip|
     config.vm.define name do |machine|
-      machine.vm.hostname = "%s.foto23.com" % name
+      machine.vm.hostname = "%s" % name
       machine.vm.network :private_network, ip: ip
     end
   end

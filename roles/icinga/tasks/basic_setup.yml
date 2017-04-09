@@ -1,0 +1,25 @@
+- name: Add debmon Key
+  apt_key:
+    url: https://debmon.org/debmon/repo.key
+    state: present
+
+
+- name: Add debmon repository
+  apt_repository:
+    repo: deb https://debmon.org/debmon debmon-jessie main
+    state: present
+    update_cache: yes
+
+- name: Add backports repository
+  apt_repository:
+    repo: deb http://ftp.de.debian.org/debian jessie-backports main
+    state: present
+    update_cache: yes
+
+- name: install Icinga and dependencies
+  apt:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - icinga2
+    
