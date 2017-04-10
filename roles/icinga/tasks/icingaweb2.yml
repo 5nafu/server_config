@@ -1,0 +1,43 @@
+- name: Install icingaweb2 & Letsencrypt
+  apt:
+    name: icingaweb2
+    state: present
+
+- name: enable ssl and headers
+  apache2_module:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - ssl
+    - headers
+  notify:
+    - restart apache2
+
+- name: Add apache Config
+  template:
+    src: apache-vhost.conf
+    dest: /etc/apache2/sites-available/icinga-vhost.conf
+    mode: 644
+    owner: root
+    group: root
+  notify:
+    - restart apache2
+
+- name: enable vhost
+  command: a2ensite icinga-vhost
+  register: a2ensite
+  become: true
+  changed_when: '"Enabling site" in a2ensite.stdout'
+  notify:
+    - restart apache2
+
+- name: disable vhost
+  command: "a2dissite {{ item }}"
+  register: a2dissite
+  become: true
+  changed_when: '"already" not in a2dissite.stdout'
+  with_items:
+    - 000-default
+    - default-ssl
+  notify:
+    - restart apache2

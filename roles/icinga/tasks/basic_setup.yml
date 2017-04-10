@@ -3,16 +3,9 @@
     url: https://debmon.org/debmon/repo.key
     state: present
 
-
 - name: Add debmon repository
   apt_repository:
     repo: deb https://debmon.org/debmon debmon-jessie main
-    state: present
-    update_cache: yes
-
-- name: Add backports repository
-  apt_repository:
-    repo: deb http://ftp.de.debian.org/debian jessie-backports main
     state: present
     update_cache: yes
 
@@ -22,4 +15,54 @@
     state: present
   with_items:
     - icinga2
-    
+    - monitoring-plugins
+    - icinga2-ido-mysql
+    - apache2
+    - python-mysqldb
+
+- name: Set apache iptables
+  iptables_raw:
+    name: allow_apache
+    weight: 50
+    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
+    state: present
+    rules: |
+      -A INPUT -p tcp -m tcp --dport 443 -j ACCEPT
+      -A INPUT -p tcp -m tcp --dport 80 -j ACCEPT
+
+- name: Add Mysql Database
+  mysql_db:
+    name: icinga
+    state: present
+  register: icinge_db_created
+
+- name: Add Mysql Database
+  mysql_db:
+    name: icinga
+    target: /usr/share/icinga2-ido-mysql/schema/mysql.sql
+    state: import
+  when: icinge_db_created.changed
+
+- name: Add MySQL User
+  mysql_user:
+    name: icinga
+    password: "{{ icinga_mysql_password }}"
+    priv: icinga.*:ALL
+
+- name: Add ido-mysql Configuration
+  template:
+    src: ido-mysql.conf.j2
+    dest: /etc/icinga2/features-available/ido-mysql.conf
+    mode: 600
+    owner: nagios
+    group: nagios
+  become: true
+  notify:
+    - restart icinga2
+
+- name: Enable ido-mysql
+  command: icinga2 feature enable ido-mysql
+  args:
+    creates: /etc/icinga2/features-enabled/ido-mysql.conf
+  notify:
+    - restart icinga2

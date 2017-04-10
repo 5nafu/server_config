@@ -1,0 +1,35 @@
+- name: Ensure LetsEncrypt Directory
+  file:
+    path: /etc/letsencrypt
+    state: directory
+
+- name: "Write letsencrypt Config"
+  template:
+    src: 'letsencrypt.ini'
+    dest: '/etc/letsencrypt/cli.ini'
+    owner: 'root'
+    group: 'root'
+    mode: '644'
+  register: cert_definition
+
+- name: Add backports repository
+  apt_repository:
+    repo: deb http://ftp.de.debian.org/debian jessie-backports main
+    state: present
+    update_cache: yes
+
+- name: install letsencrypt
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+    default_release: jessie-backports
+  with_items:
+    - certbot
+
+- name: "Install New Cert"
+  shell: certbot certonly --test-cert
+  ignore_errors: true
+  when: cert_definition.changed
+  notify:
+    - restart apache2
