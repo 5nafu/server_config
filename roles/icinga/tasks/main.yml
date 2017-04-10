@@ -1,3 +1,4 @@
 - include: basic_setup.yml
 - include: letsencrypt.yml
 - include: icingaweb2.yml
+- include: configure_icinga.yml

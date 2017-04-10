@@ -34,20 +34,21 @@
   mysql_db:
     name: icinga
     state: present
-  register: icinge_db_created
+  register: icinga_db_created
 
-- name: Add Mysql Database
+- name: Import Mysql Database
   mysql_db:
     name: icinga
     target: /usr/share/icinga2-ido-mysql/schema/mysql.sql
     state: import
-  when: icinge_db_created.changed
+  when: icinga_db_created.changed
 
 - name: Add MySQL User
   mysql_user:
     name: icinga
     password: "{{ icinga_mysql_password }}"
     priv: icinga.*:ALL
+    append_privs: yes
 
 - name: Add ido-mysql Configuration
   template:

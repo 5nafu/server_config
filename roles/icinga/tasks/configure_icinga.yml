@@ -1,0 +1,193 @@
+- name: Ensure config directories
+  file:
+    path: "{{ item }}"
+    group: icingaweb2
+    state: directory
+    mode: 1770
+    owner: www-data
+  with_items:
+    - /etc/icingaweb2
+    - /etc/icingaweb2/enabledModules
+    - /etc/icingaweb2/modules
+
+
+- name: enable command plugin
+  command: icinga2 feature enable command
+  register: icinga_feature
+  changed_when: "'already enabled' not in icinga_feature.stdout"
+  notify:
+    - restart icinga2
+
+# - name: check if setup token exists
+#   stat:
+#     path: /etc/icingaweb2/setup.token
+#   register: icinga_setup_token_file
+#
+# - name: generate setup token
+#   command: icingacli setup token create
+#   when: not icinga_setup_token_file.stat.exists
+
+# - name: get setup token
+#   shell: cat /etc/icingaweb2/setup.token
+#   register: icinga_setup_token
+#   changed_when: False
+
+- name: Setup timezone
+  lineinfile:
+    dest: /etc/php5/apache2/php.ini
+    regexp: ^[; ]*date.timezone
+    line: date.timezone = Europe/Berlin
+  notify:
+    - restart apache2
+
+- name: Add Mysql Database
+  mysql_db:
+    name: icingaweb
+    state: present
+  register: icingaweb_db_created
+
+- name: Add MySQL User
+  mysql_user:
+    name: icinga
+    password: "{{ icinga_mysql_password }}"
+    priv: icingaweb.*:ALL
+    append_privs: yes
+
+- name: Import Mysql Database
+  mysql_db:
+    name: icingaweb
+    target: /usr/share/icingaweb2/etc/schema/mysql.schema.sql
+    state: import
+  when: icingaweb_db_created.changed
+
+- name: Add roles configuration
+  ini_file:
+    dest: /etc/icingaweb2/roles.ini
+    section: Administrators
+    value: "{{ item.value }}"
+    option: "{{ item.key }}"
+    group: icingaweb2
+    state: present
+    mode: 660
+    owner: www-data
+  with_dict:
+    users: '"snafu, h0uz3"'
+    permissions: '"*"'
+    groups: '"Administrators"'
+
+- name: Add resources Configuration
+  ini_file:
+    dest: /etc/icingaweb2/resources.ini
+    section: "{{ item.section }}"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    group: icingaweb2
+    owner: www-data
+    state: present
+    mode: 660
+  with_items:
+      - { section: "icingaweb", key: "type", value: "db" }
+      - { section: "icingaweb", key: "db", value: "mysql" }
+      - { section: "icingaweb", key: "host", value: "localhost" }
+      - { section: "icingaweb", key: "port", value: "3306" }
+      - { section: "icingaweb", key: "dbname", value: "icingaweb" }
+      - { section: "icingaweb", key: "username", value: "icinga" }
+      - { section: "icingaweb", key: "password", value: "{{  icinga_mysql_password }}" }
+      - { section: "icingaweb", key: "charset", value: '""' }
+      - { section: "icingaweb", key: "persistent", value: "0" }
+      - { section: "icingaweb", key: "use_ssl", value: "0" }
+      - { section: "icinga_ido", key: "type", value: "db" }
+      - { section: "icinga_ido", key: "db", value: "mysql" }
+      - { section: "icinga_ido", key: "host", value: "localhost" }
+      - { section: "icinga_ido", key: "port", value: "3306" }
+      - { section: "icinga_ido", key: "dbname", value: "icinga" }
+      - { section: "icinga_ido", key: "username", value: "icinga" }
+      - { section: "icinga_ido", key: "password", value: "{{  icinga_mysql_password }}" }
+      - { section: "icinga_ido", key: "charset", value: '""' }
+      - { section: "icinga_ido", key: "persistent", value: "0" }
+      - { section: "icinga_ido", key: "use_ssl", value: "0" }
+
+- name: Add groups Configuration
+  ini_file:
+    dest: /etc/icingaweb2/groups.ini
+    section: "icingaweb2"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    group: icingaweb2
+    owner: www-data
+    state: present
+    mode: 660
+  with_dict:
+      backend: "db"
+      resource: "icingaweb"
+
+- name: Add Configuration
+  ini_file:
+    dest: /etc/icingaweb2/config.ini
+    section: "{{ item.section }}"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    group: icingaweb2
+    owner: www-data
+    state: present
+    mode: 660
+  with_items:
+    - { section: "global", key: "show_stacktraces", value: "1" }
+    - { section: "global", key: "config_backend", value: "db" }
+    - { section: "global", key: "config_resource", value: "icingaweb" }
+    - { section: "logging", key: "log", value: "syslog" }
+    - { section: "logging", key: "level", value: "ERROR" }
+    - { section: "logging", key: "application", value: "icingaweb2" }
+    - { section: "logging", key: "facility", value: "user" }
+
+- name: Add Configuration
+  ini_file:
+    dest: /etc/icingaweb2/authentication.ini
+    section: "icingaweb2"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    group: icingaweb2
+    owner: www-data
+    state: present
+    mode: 660
+  with_items:
+    - { key: "backend", value: "db" }
+    - { key: "resource", value: "icingaweb" }
+
+- name: Add module Configuration
+  ini_file:
+    dest: "/etc/icingaweb2/modules/{{ item.file }}.ini"
+    section: "{{ item.section }}"
+    option: "{{ item.key }}"
+    value: "{{ item.value }}"
+    group: icingaweb2
+    owner: www-data
+    state: present
+    mode: 660
+  with_items:
+    - { file: monitoring/backends, section: icinga, key: "type", value: "ido" }
+    - { file: monitoring/backends, section: icinga, key: "resource", value: "icinga_ido" }
+    - { file: monitoring/commandtransports , section: icinga2, key: "transport", value: "local" }
+    - { file: monitoring/commandtransports , section: icinga2, key: "path", value: "/var/run/icinga2/cmd/icinga2.cmd" }
+    - { file: monitoring/config , section: security, key: "protected_customvars", value: '"*pw*,*pass*,community"' }
+    - { file: translation/config , section: translation, key: "msgmerge", value: '/usr/bin/msgmerge' }
+    - { file: translation/config , section: translation, key: "xgettext", value: '/usr/bin/xgettext' }
+    - { file: translation/config , section: translation, key: "msgfmt", value: '/usr/bin/msgfmt' }
+
+- name: add default Users - copy Dump
+  template:
+    src: icingaweb_poulate_users.sql
+    dest: /root/icingaweb_poulate_users.sql
+    owner: root
+    mode: 0600
+- name: add default Users - import Dump
+  mysql_db:
+    name: icingaweb
+    login_user: root
+    single_transaction: yes
+    target: /root/icingaweb_poulate_users.sql
+    state: import
+- name: add default Users - remove Dump
+  file:
+    path: /root/icingaweb_poulate_users.sql
+    state: absent
