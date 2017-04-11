@@ -70,7 +70,7 @@
 
 - name: Check if api-users file already exists.
   stat:
-    path: etc/icinga2/conf.d/api-users.conf
+    path: /etc/icinga2/conf.d/api-users.conf
   register: apiusers_file
   changed_when: False
 
