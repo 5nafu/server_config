@@ -9,6 +9,8 @@
     - /etc/icingaweb2
     - /etc/icingaweb2/enabledModules
     - /etc/icingaweb2/modules
+    - /etc/icingaweb2/dashboards
+    - /etc/icingaweb2/dashboards/snafu
 
 
 - name: enable command plugin
@@ -191,3 +193,11 @@
   file:
     path: /root/icingaweb_poulate_users.sql
     state: absent
+
+- name: add dashboard for snafu
+  file:
+    path: /etc/icingaweb2/dashboards/snafu/dashboard.ini
+    group: icingaweb2
+    mode: 0660
+    owner: www-data
+    src: snafu_dashboard.ini
