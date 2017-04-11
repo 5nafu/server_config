@@ -1,2 +1,3 @@
 ---
 monitoring_server: "{{ vault.monitoring_server }}"
+icinga_client-pki-ticket_password: "{{ icinga_client-pki-ticket_password}}"

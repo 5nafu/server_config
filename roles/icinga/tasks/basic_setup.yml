@@ -67,3 +67,34 @@
     creates: /etc/icinga2/features-enabled/ido-mysql.conf
   notify:
     - restart icinga2
+
+- name: Check if api-users file already exists.
+  stat:
+    path: etc/icinga2/conf.d/api-users.conf
+  register: apiusers_file
+  changed_when: False
+
+- name: add default API Users
+  template:
+    src: api-users.conf
+    dest: /etc/icinga2/conf.d/api-users.conf
+    owner: root
+    mode: 0666
+  when: apiusers_file.stat.exists == false
+  notify:
+    - restart icinga2
+
+- name: Enable api
+  command: icinga2 api setup
+  args:
+    creates: /etc/icinga2/features-enabled/api.conf
+  notify:
+    - restart icinga2
+
+- name: Set api iptables
+  iptables_raw:
+    name: allow_icinga_api
+    weight: 50
+    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
+    state: present
+    rules: "-A INPUT -p tcp -m tcp --dport 5665 -j ACCEPT"
