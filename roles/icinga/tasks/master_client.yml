@@ -51,3 +51,13 @@
   with_items: "{{ groups['monitoring-clients'] }}"
   notify:
     - restart icinga2
+
+- name: Add services Configuration
+  file:
+    path: /etc/icinga2/zones.d/master/services.conf
+    group: root
+    mode: 0644
+    owner: root
+    src: services.conf
+  notify:
+    - restart icinga2
