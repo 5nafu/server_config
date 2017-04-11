@@ -1,4 +1,4 @@
-- name: Install icingaweb2 & Letsencrypt
+- name: Install icingaweb2
   apt:
     name: icingaweb2
     state: present
