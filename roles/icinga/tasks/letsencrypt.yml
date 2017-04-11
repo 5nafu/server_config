@@ -9,7 +9,7 @@
     dest: '/etc/letsencrypt/cli.ini'
     owner: 'root'
     group: 'root'
-    mode: '644'
+    mode: '0644'
   register: cert_definition
 
 - name: Add backports repository

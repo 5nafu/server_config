@@ -3,7 +3,7 @@
     path: "{{ item }}"
     group: icingaweb2
     state: directory
-    mode: 1770
+    mode: 06770
     owner: www-data
   with_items:
     - /etc/icingaweb2
@@ -68,7 +68,7 @@
     option: "{{ item.key }}"
     group: icingaweb2
     state: present
-    mode: 660
+    mode: 0660
     owner: www-data
   with_dict:
     users: '"snafu, h0uz3"'
@@ -84,7 +84,7 @@
     group: icingaweb2
     owner: www-data
     state: present
-    mode: 660
+    mode: 0660
   with_items:
       - { section: "icingaweb", key: "type", value: "db" }
       - { section: "icingaweb", key: "db", value: "mysql" }
@@ -116,7 +116,7 @@
     group: icingaweb2
     owner: www-data
     state: present
-    mode: 660
+    mode: 0660
   with_dict:
       backend: "db"
       resource: "icingaweb"
@@ -130,7 +130,7 @@
     group: icingaweb2
     owner: www-data
     state: present
-    mode: 660
+    mode: 0660
   with_items:
     - { section: "global", key: "show_stacktraces", value: "1" }
     - { section: "global", key: "config_backend", value: "db" }
@@ -149,7 +149,7 @@
     group: icingaweb2
     owner: www-data
     state: present
-    mode: 660
+    mode: 0660
   with_items:
     - { key: "backend", value: "db" }
     - { key: "resource", value: "icingaweb" }
@@ -163,7 +163,7 @@
     group: icingaweb2
     owner: www-data
     state: present
-    mode: 660
+    mode: 0660
   with_items:
     - { file: monitoring/backends, section: icinga, key: "type", value: "ido" }
     - { file: monitoring/backends, section: icinga, key: "resource", value: "icinga_ido" }

@@ -54,7 +54,7 @@
   template:
     src: ido-mysql.conf.j2
     dest: /etc/icinga2/features-available/ido-mysql.conf
-    mode: 600
+    mode: 0600
     owner: nagios
     group: nagios
   become: true
