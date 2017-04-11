@@ -194,6 +194,14 @@
     path: /root/icingaweb_poulate_users.sql
     state: absent
 
+- name: enable monitoring Module for icingaweb
+  command: icingacli module enable monitoring
+  args:
+    creates: /etc/icingaweb2/enabledModules/monitoring
+  become: true
+  notify:
+    - restart icinga2
+
 - name: add dashboard for snafu
   file:
     path: /etc/icingaweb2/dashboards/snafu/dashboard.ini
