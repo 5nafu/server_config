@@ -16,7 +16,7 @@ ON DUPLICATE KEY UPDATE
 INSERT INTO `icingaweb_user`
   (name, active, password_hash, ctime)
 VALUES
-  ('h0uz3',1,'{{ icinga_default_passwords['h0uz3']['password']|password_hash('md5sum') }}',NOW()),
-  ('snafu',1,'{{ icinga_default_passwords['snafu']['password']|password_hash('md5sum') }}',NOW())
+  ('h0uz3',1,'{{ icinga_default_passwords.h0uz3.password|password_hash('md5') }}',NOW()),
+  ('snafu',1,'{{ icinga_default_passwords.snafu.password|password_hash('md5') }}',NOW())
 ON DUPLICATE KEY UPDATE
   active=VALUES(active);
