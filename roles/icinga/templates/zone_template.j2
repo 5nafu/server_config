@@ -1,0 +1,10 @@
+/* ANSIBLE GENERATED */
+object Endpoint "{{ item }}" {
+  host = "{{ item }}"
+}
+
+object Zone "{{ item }}" {
+  endpoints = [ "{{ item }}" ]
+
+  parent = "master"
+}

@@ -1,0 +1,53 @@
+- name: Check if api-users file already exists.
+  stat:
+    path: /etc/icinga2/pki/ca.crt
+  register: pkica_file
+  changed_when: False
+
+- name: Generate master node
+  command: icinga2 node setup --master
+  when: pkica_file.stat.exists == false
+
+- name: Ensure config directories and files
+  file:
+    path: "{{ item.path }}"
+    group: root
+    state: "{{ item.state }}"
+    mode: "{{ item.mode }}"
+    owner: root
+  with_items:
+    - {path: "/etc/icinga2/zones.conf.d", state: "directory", mode: "0755" }
+    - {path: "/etc/icinga2/zones.d/master", state: "directory", mode: "0755" }
+    - {path: "/etc/icinga2/zones.conf.d/README", state: "touch", mode: "0644" }
+
+- name: Add Zone Configuration
+  file:
+    path: /etc/icinga2/zones.conf
+    group: root
+    mode: 0644
+    owner: root
+    src: zones.conf
+  notify:
+    - restart icinga2
+
+- name: Copy Host Definitions - Zone File
+  template:
+    src: zone_template.j2
+    dest: /etc/icinga2/zones.conf.d/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ groups['monitoring-clients'] }}"
+  notify:
+    - restart icinga2
+
+- name: Copy Host Definitions - Host File
+  template:
+    src: host_template.j2
+    dest: /etc/icinga2/zones.d/master/{{ item }}.conf
+    owner: root
+    group: root
+    mode: 0644
+  with_items: "{{ groups['monitoring-clients'] }}"
+  notify:
+    - restart icinga2

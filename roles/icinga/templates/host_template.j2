@@ -1,0 +1,24 @@
+object Host "{{ item }}" {
+  /* Import the default host template defined in `templates.conf`. */
+  import "generic-host"
+
+  /* Specify the address attributes for checks e.g. `ssh` or `http`. */
+{% if hostvars[item]['monitoring_ipv4'] is defined %}
+  address = "{{ hostvars[item]['monitoring_ipv4'] }}"
+{% elif hostvars[item]['ansible_default_ipv4'] is defined %}
+  address = "{{ hostvars[item]['ansible_default_ipv4']['address'] }}"
+{%endif%}
+{% if hostvars[item]['monitoring_ipv6'] is defined %}
+  address6 = "{{ hostvars[item]['monitoring_ipv6'] }}"
+{% elif hostvars[item]['ansible_default_ipv6'] is defined %}
+  address6 = "{{ hostvars[item]['ansible_default_ipv6']['address'] }}"
+{%endif%}
+
+  vars.os = "{{ hostvars[item]['ansible_system']|default('Linux') }}"
+  vars.os_family = "{{ hostvars[item]['ansible_os_family']|default('Debian') }}"
+  vars.client_endpoint = name
+  vars.notification["mail"] = {
+    groups = [ "icingaadmins" ]
+  }
+  {{ hostvars[item]['host_attributes'] | default('')}}
+}
