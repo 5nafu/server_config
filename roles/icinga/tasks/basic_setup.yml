@@ -1,21 +1,8 @@
-- name: Add debmon Key
-  apt_key:
-    url: https://debmon.org/debmon/repo.key
-    state: present
-
-- name: Add debmon repository
-  apt_repository:
-    repo: deb https://debmon.org/debmon debmon-jessie main
-    state: present
-    update_cache: yes
-
 - name: install Icinga and dependencies
   apt:
     name: "{{ item }}"
     state: present
   with_items:
-    - icinga2
-    - monitoring-plugins
     - icinga2-ido-mysql
     - apache2
     - python-mysqldb
@@ -83,18 +70,3 @@
   when: apiusers_file.stat.exists == false
   notify:
     - restart icinga2
-
-- name: Enable api
-  command: icinga2 api setup
-  args:
-    creates: /etc/icinga2/features-enabled/api.conf
-  notify:
-    - restart icinga2
-
-- name: Set api iptables
-  iptables_raw:
-    name: allow_icinga_api
-    weight: 50
-    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
-    state: present
-    rules: "-A INPUT -p tcp -m tcp --dport 5665 -j ACCEPT"
