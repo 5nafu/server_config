@@ -1,1 +1,1 @@
----
+- include: get_pki_ticket.yml

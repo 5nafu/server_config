@@ -1,0 +1,17 @@
+---
+- name: Get URL
+  uri:
+    url: "https://{{ monitoring_server }}:5665/v1/actions/generate-ticket"
+    HEADER_Accept: application/json
+    user: client-pki-ticket
+    password: "{{ icinga_client_pki_ticket_password }}"
+    body: ' { "cn": "{{ ansible_fqdn }}" }' #Keep Space before { to prevent YAML-parsing
+    return_content: yes
+    validate_certs: no
+    method: POST
+  register: pki_ticket_content
+  delegate_to: localhost
+
+- name: Register PKI-Ticket
+  set_fact:
+    pki_ticket: "{{ pki_ticket_content.json.results.0.ticket }}"
