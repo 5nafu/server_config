@@ -62,6 +62,15 @@
     state: import
   when: icingaweb_db_created.changed
 
+- name: Setup Ticket Salt
+  lineinfile:
+    dest: /etc/icinga2/constants.conf
+    regexp: ^const TicketSalt
+    line: 'const TicketSalt = "{{ icinga_ticket_salt }}"'
+  notify:
+    - restart icinga2
+  tags: debug
+
 - name: Add roles configuration
   ini_file:
     dest: /etc/icingaweb2/roles.ini
