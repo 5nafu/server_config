@@ -1,0 +1,142 @@
+- name: Install graphite dependencies
+  apt:
+    name: "{{ item }}"
+  with_items:
+    - graphite-carbon
+    - libapache2-mod-wsgi
+    - graphite-web
+
+- name: enable perfdata plugin
+  command: icinga2 feature enable perfdata
+  register: icinga_feature
+  changed_when: "'already enabled' not in icinga_feature.stdout"
+  notify:
+    - restart icinga2
+
+- name: enable graphite plugin
+  command: icinga2 feature enable graphite
+  register: icinga_feature
+  changed_when: "'already enabled' not in icinga_feature.stdout"
+  notify:
+    - restart icinga2
+
+- name: Check out current graphite module for icingaweb2
+  git:
+    dest: /usr/share/icingaweb2/modules/graphite
+    repo: https://github.com/findmypast/icingaweb2-module-graphite.git
+
+
+- name: Create config directory for icingaweb2-module-graphite
+  file:
+    path: /etc/icingaweb2/modules/graphite
+    state: directory
+    owner: root
+    group: icingaweb2
+    mode: 0755
+
+- name: Add Configuration for icingaweb2-module-graphite
+  ini_file:
+    dest: /etc/icingaweb2/modules/graphite/config.ini
+    section: graphite
+    value: "{{ item.value }}"
+    option: "{{ item.key }}"
+    group: icingaweb2
+    state: present
+    mode: 0660
+    owner: www-data
+  with_dict:
+    metric_prefix: icinga2
+    base_url: "https://monitor.tvollmer.de:8443//render?"
+    legacy_mode: true
+
+- name: Logrotate carbon-logs
+  ini_file:
+    dest: /etc/carbon/carbon.conf
+    section: cache
+    value: ENABLE_LOGROTATION
+    option: true
+    state: present
+  notify:
+    - restart carbon
+
+- name: Add storage schema config
+  blockinfile:
+    dest: /etc/carbon/storage-schemas.conf
+    block: |
+      [icinga2_default]
+      # intervals like PNP4Nagios uses them per default
+      pattern = ^icinga2\.
+      retentions = 1min:180d,10min:280d
+    insertbefore: "^.default_.*"
+  notify:
+    - restart carbon
+
+- name: Generate config for carbon-web
+  lineinfile:
+    dest: /etc/graphite/local_settings.py
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: "^#*SECRET_KEY", line: "SECRET_KEY = '{{ ansible_fqdn |hash('md5') }}'"}
+    - { regexp: "^#*TIME_ZONE", line: "TIME_ZONE = 'Europe/Berlin'"}
+  notify:
+    - restart apache2
+
+- name: Enable wsgi
+  apache2_module:
+    name: wsgi
+  notify:
+    - restart apache2
+
+- name: Add apache Config
+  template:
+    src: graphite-vhost.conf
+    dest: /etc/apache2/sites-available/graphite-vhost.conf
+    mode: 0644
+    owner: root
+    group: root
+  notify:
+    - restart apache2
+
+- name: enable vhost
+  command: a2ensite graphite-vhost
+  register: a2ensite_graphite
+  become: true
+  changed_when: '"Enabling site" in a2ensite_graphite.stdout'
+  notify:
+    - restart apache2
+
+- name: Listen on Port
+  lineinfile:
+    dest: /etc/apache2/ports.conf
+    insertafter: "<IfModule ssl_module>"
+    line: "        Listen 8443"
+  notify:
+    - restart apache2
+
+- name: sync graphite DB
+  command: python /usr/lib/python2.7/dist-packages/graphite/manage.py migrate --noinput
+  args:
+    creates: /var/lib/graphite/graphite.db
+  register: graphite_syncdb
+  failed_when: "'ERROR' in graphite_syncdb.stdout"
+  changed_when: "'No migrations to apply.' not in graphite_syncdb.stdout"
+  become_user: _graphite
+  notify:
+    - restart apache2
+
+- name: enable graphite module
+  command: icingacli module enable graphite
+  args:
+    creates: /etc/icingaweb2/enabledModules/graphite
+  become: true
+  notify:
+    - restart icinga2
+
+- name: Set apache iptables
+  iptables_raw:
+    name: allow_graphite
+    weight: 50
+    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
+    state: present
+    rules: "-A INPUT -p tcp -m tcp --dport 8443 -j ACCEPT"

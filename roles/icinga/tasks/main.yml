@@ -3,3 +3,4 @@
 - include: icingaweb2.yml
 - include: configure_icinga.yml
 - include: master_client.yml
+- include: graphite.yml

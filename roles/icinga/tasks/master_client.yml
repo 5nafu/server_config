@@ -21,8 +21,8 @@
     - {path: "/etc/icinga2/zones.conf.d/README", state: "touch", mode: "0644" }
 
 - name: Add Zone Configuration
-  file:
-    path: /etc/icinga2/zones.conf
+  copy:
+    dest: /etc/icinga2/zones.conf
     group: root
     mode: 0644
     owner: root
@@ -53,8 +53,8 @@
     - restart icinga2
 
 - name: Add services Configuration
-  file:
-    path: /etc/icinga2/zones.d/master/services.conf
+  copy:
+    dest: /etc/icinga2/zones.d/master/services.conf
     group: root
     mode: 0644
     owner: root

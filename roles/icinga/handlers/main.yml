@@ -3,3 +3,6 @@
 
 - name: restart apache2
   systemd: name=apache2 state=restarted
+
+- name: restart carbon
+  systemd: name=carbon-cache state=restarted

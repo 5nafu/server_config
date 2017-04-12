@@ -203,8 +203,8 @@
     - restart icinga2
 
 - name: add dashboard for snafu
-  file:
-    path: /etc/icingaweb2/dashboards/snafu/dashboard.ini
+  copy:
+    dest: /etc/icingaweb2/dashboards/snafu/dashboard.ini
     group: icingaweb2
     mode: 0660
     owner: www-data
