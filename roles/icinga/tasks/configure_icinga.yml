@@ -69,7 +69,6 @@
     line: 'const TicketSalt = "{{ icinga_ticket_salt }}"'
   notify:
     - restart icinga2
-  tags: debug
 
 - name: Add roles configuration
   ini_file:
@@ -218,3 +217,11 @@
     mode: 0660
     owner: www-data
     src: snafu_dashboard.ini
+
+- name: remove swap
+  replace:
+    dest: /etc/icinga2/conf.d/services.conf
+    regexp: '(?ms)apply Service "swap" {[^}]*}\n\n'
+    replace: ""
+  notify:
+    - restart icinga2

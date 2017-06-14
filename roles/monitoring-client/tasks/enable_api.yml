@@ -1,0 +1,9 @@
+- name: Allow API Commands
+  blockinfile:
+    dest: /etc/icinga2/features-available/api.conf
+    insertafter: 'object ApiListener "api" {'
+    block: |
+      accept_config = true
+      accept_commands = true
+  notify:
+    -restart icinga2

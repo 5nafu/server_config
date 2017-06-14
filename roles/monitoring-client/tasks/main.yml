@@ -1,1 +1,3 @@
 - include: get_pki_ticket.yml
+- include: generate_pki.yml
+- include: setup_permissions.yml

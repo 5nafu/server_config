@@ -1,0 +1,19 @@
+- name: Check for exim
+  stat:
+    path: /usr/bin/exim
+  register: exim_executable
+  changed_when: False
+
+- name: Add nagios User to Exim group
+  user:
+    name: nagios
+    groups: Debian-exim
+    append: yes
+  when: exim_executable.stat.exists
+  notify:
+    - restart icinga2
+
+- name: add SetUID-Bit for smart-check
+  file:
+    path: /usr/lib/nagios/plugins/check_ide_smart
+    mode: 06755
