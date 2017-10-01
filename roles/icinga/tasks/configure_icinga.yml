@@ -225,3 +225,11 @@
     replace: ""
   notify:
     - restart icinga2
+
+- name: remove Downtime
+  replace:
+    dest: /etc/icinga2/conf.d/services.conf
+    regexp: '(?ms)  /\* Used by the ScheduledDowntime apply rule in `downtimes.conf`. \*/\n  vars.backup_downtime = "02:00-03:00"\n'
+    replace: ""
+  notify:
+    - restart icinga2
