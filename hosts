@@ -1,6 +1,6 @@
 monitor.tvollmer.de ansible_ssh_host=78.46.205.62
-srv.foto23.com
-visor.foto23.com
+srv.tvollmer.de
+visor.tvollmer.de
 
 
 [datacenter:children]
@@ -13,20 +13,20 @@ mailserver
 ansible_become=true
 
 [hypervisor]
-visor.foto23.com
+visor.tvollmer.de
 
 [guests]
-srv.foto23.com
+srv.tvollmer.de
 
 [mailserver]
-srv.foto23.com
+srv.tvollmer.de
 
 [froxlor]
-srv.foto23.com
+srv.tvollmer.de
 
 [monitoring]
 monitor.tvollmer.de
 
 [monitoring-clients]
-srv.foto23.com
-visor.foto23.com
+srv.tvollmer.de
+visor.tvollmer.de
