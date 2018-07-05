@@ -131,7 +131,7 @@
       backend: "db"
       resource: "icingaweb"
 
-- name: Add Configuration
+- name: Add basic configuration
   ini_file:
     dest: /etc/icingaweb2/config.ini
     section: "{{ item.section }}"
@@ -150,7 +150,7 @@
     - { section: "logging", key: "application", value: "icingaweb2" }
     - { section: "logging", key: "facility", value: "user" }
 
-- name: Add Configuration
+- name: Add authentification configuration
   ini_file:
     dest: /etc/icingaweb2/authentication.ini
     section: "icingaweb2"
@@ -164,7 +164,7 @@
     - { key: "backend", value: "db" }
     - { key: "resource", value: "icingaweb" }
 
-- name: Add module Configuration
+- name: Add module configuration
   ini_file:
     dest: "/etc/icingaweb2/modules/{{ item.file }}.ini"
     section: "{{ item.section }}"
