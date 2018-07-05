@@ -3,8 +3,15 @@
   with_items:
     - openssh-server
     - ebtables
-    - openssh-blacklist
-    - openssh-blacklist-extra
+
+- name: Install plattform specific security packages
+  apt:
+    name: "{{ item.key }}"
+    state: latest
+  when: ansible_distribution == item.value
+  with_dict:
+    openssh-blacklist: Debian
+    openssh-blacklist-extra: Debian
 
 - name: No Root Login
   lineinfile:

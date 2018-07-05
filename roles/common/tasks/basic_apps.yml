@@ -2,51 +2,64 @@
 
 
 - name: Install common software
-  apt: name={{ item }} state=present
-  with_items:
-    - apt-rdepends
-    - apt-transport-https
-    - at
-    - bash-completion
-    - ca-certificates
-    - ethtool
-    - facter
-    - git
-    - hdparm
-    - heirloom-mailx
-    - haveged
-    - htop
-    - iotop
-    - iputils-tracepath
-    - libwww-perl
-    - locate
-    - mawk
-    - mc
-    - molly-guard
-    - multitail
-    - mtr
-    - netcat-openbsd
-    - net-tools
-    - nmap
-    - ntpdate
-    - openssh-blacklist
-    - openssh-blacklist-extra
-    - postfix
-    - psmisc
-    - subversion
-    - sudo
-    - tcpdump
-    - telnet
-    - time
-    - tmux
-    - tree
-    - vim
-    - w3m
-    - whois
-    - zsh
+  apt:
+    name: "{{ packages }}"
+    state: latest
+  vars:
+    packages:
+      - apt-rdepends
+      - apt-transport-https
+      - at
+      - bash-completion
+      - ca-certificates
+      - ethtool
+      - facter
+      - git
+      - hdparm
+      - haveged
+      - htop
+      - iotop
+      - iputils-tracepath
+      - libwww-perl
+      - locate
+      - mawk
+      - mc
+      - molly-guard
+      - multitail
+      - mtr
+      - netcat-openbsd
+      - net-tools
+      - nmap
+      - ntpdate
+      - postfix
+      - psmisc
+      - subversion
+      - sudo
+      - tcpdump
+      - telnet
+      - time
+      - tmux
+      - tree
+      - vim
+      - w3m
+      - whois
+      - zsh
+
+- name: Install plattform specific packages
+  apt:
+    name: "{{ item.key }}"
+    state: latest
+  when: ansible_distribution == "{{ item.value }}"
+  with_dict:
+    heirloom-mailx: Debian
+    s-nail: Ubuntu
+
 
 - name: Remove harmful / unneeded
-  apt: name={{ item }} state=absent
-  with_items:
-    - ftp
-    - exim
+  apt:
+    name: "{{ packages }}"
+    state: absent
+  vars:
+    packages:
+      - ftp
+      - exim
