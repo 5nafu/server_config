@@ -1,32 +1,28 @@
-monitor.tvollmer.de ansible_ssh_host=78.46.205.62
-srv.tvollmer.de
-visor.tvollmer.de
-
-
-[datacenter:children]
-hypervisor
-monitoring
-guests
-mailserver
-
-[datacenter:vars]
-ansible_become=true
-
-[hypervisor]
-visor.tvollmer.de
-
-[guests]
-srv.tvollmer.de
-
-[mailserver]
-srv.tvollmer.de
-
-[froxlor]
-srv.tvollmer.de
-
-[monitoring]
-monitor.tvollmer.de
-
-[monitoring-clients]
-srv.tvollmer.de
-visor.tvollmer.de
+---
+all:
+  children:
+    datacenter:
+      vars:
+        ansible_become: true
+      children:
+        hypervisor:
+          hosts:
+            visor.tvollmer.de:
+        monitoring:
+          hosts:
+            monitor.tvollmer.de:
+              vars:
+                ansible_ssh_host: 78.46.205.62
+        guests:
+          hosts:
+            srv.tvollmer.de:
+        mailserver:
+          hosts:
+            srv.tvollmer.de:
+        froxlor:
+          hosts:
+            srv.tvollmer.de:
+    monitoring-clients:
+      hosts:
+        srv.tvollmer.de:
+        visor.tvollmer.de:
