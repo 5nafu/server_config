@@ -49,7 +49,7 @@
   apt:
     name: "{{ item.key }}"
     state: latest
-  when: ansible_distribution == "{{ item.value }}"
+  when: ansible_distribution == item.value
   with_dict:
     heirloom-mailx: Debian
     s-nail: Ubuntu
