@@ -11,6 +11,7 @@
     - /etc/icingaweb2/modules
     - /etc/icingaweb2/dashboards
     - /etc/icingaweb2/dashboards/snafu
+    - /usr/lib/nagios/plugins/
 
 
 - name: enable command plugin
