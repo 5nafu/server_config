@@ -32,6 +32,8 @@ all:
     home:
       hosts:
         tarvalon.fritz.box:
+          vars:
+            ansible_user: snafu
       vars:
         ansible_become: true
         add_users:
