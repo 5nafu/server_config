@@ -26,3 +26,8 @@ all:
       hosts:
         srv.tvollmer.de:
         visor.tvollmer.de:
+    home:
+      hosts:
+        tarvalon.fritz.box:
+      vars:
+        ansible_become: true
