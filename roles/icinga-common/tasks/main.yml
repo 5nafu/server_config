@@ -1,11 +1,22 @@
-- name: Add debmon Key
+- name: Remove old debmon key
+  apt_key:
+    id: 29D662D2
+    state: absent
+
+- name: Remove debmon repository
+  apt_repository:
+    repo: "deb https://debmon.org/debmon debmon-{{ ansible_distribution_release}} main"
+    state: absent
+    update_cache: yes
+
+- name: Add icinga Key
   apt_key:
     url: https://packages.icinga.com/icinga.key
     state: present
 
-- name: Add debmon repository
+- name: Add icinga repository
   apt_repository:
-    repo: "deb http://packages.icinga.com/debian icinga-{{ ansible_distribution_release}} main"
+    repo: "deb https://packages.icinga.com/debian icinga-{{ ansible_distribution_release}} main"
     state: present
     update_cache: yes
 
