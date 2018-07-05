@@ -110,7 +110,7 @@
       - { section: "icinga_ido", key: "db", value: "mysql" }
       - { section: "icinga_ido", key: "host", value: "localhost" }
       - { section: "icinga_ido", key: "port", value: "3306" }
-      - { section: "icinga_ido", key: "dbname", value: "icinga" }
+      - { section: "icinga_ido", key: "dbname", value: "icinga2" }
       - { section: "icinga_ido", key: "username", value: "icinga" }
       - { section: "icinga_ido", key: "password", value: "{{  icinga_mysql_password }}" }
       - { section: "icinga_ido", key: "charset", value: '""' }
