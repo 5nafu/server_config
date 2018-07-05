@@ -4,6 +4,9 @@ all:
     datacenter:
       vars:
         ansible_become: true
+        add_users:
+          - h0uz3
+          - snafu
       children:
         hypervisor:
           hosts:
@@ -31,3 +34,5 @@ all:
         tarvalon.fritz.box:
       vars:
         ansible_become: true
+        add_users:
+          - snafu

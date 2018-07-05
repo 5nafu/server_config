@@ -1,17 +1,22 @@
 - name: Add snafu Account
   user: name=snafu comment="Tobias Vollmer" append=yes groups=sudo shell=/bin/bash
+  when: "'snafu' in add_users"
 
 - name: Add ssh pub-keys for snafu
   authorized_key:
     user: snafu
     exclusive: yes
     key: "{{ snafu_key }}"
+  when: "'snafu' in add_users"
+
 
 - name: Add h0uz3 Account
   user: name=h0uz3 comment="Sascha Kaupp" append=yes groups=sudo shell=/usr/bin/zsh
+  when: "'houz3' in add_users"
 
 - name: Add ssh pub-keys for h0uz3
   authorized_key:
     user: h0uz3
     exclusive: yes
     key: "{{ h0uz3_key }}"
+  when: "'houz3' in add_users"
