@@ -1,25 +1,25 @@
 - name: Create pki directory
   file:
-    path: /etc/icinga2/pki
+    path: /var/lib/icinga2/certs/
     group: nagios
     state: directory
     mode: 0700
     owner: nagios
 
 - name: Create PKI
-  command: "icinga2 pki new-cert --cn {{ ansible_fqdn }} --key /etc/icinga2/pki/{{ ansible_fqdn }}.key --cert /etc/icinga2/pki/{{ ansible_fqdn }}.crt"
+  command: "icinga2 pki new-cert --cn {{ ansible_fqdn }} --key /var/lib/icinga2/certs/{{ ansible_fqdn }}.key --cert /var/lib/icinga2/certs/{{ ansible_fqdn }}.crt"
   args:
-    creates: "/etc/icinga2/pki/{{ ansible_fqdn }}.key"
+    creates: "/var/lib/icinga2/certs/{{ ansible_fqdn }}.key"
   notify:
     - restart icinga2
 
 - name: get Master-Server cert
-  command: "icinga2 pki save-cert --trustedcert /etc/icinga2/pki/trusted-master.crt --host {{monitoring_server}}"
+  command: "icinga2 pki save-cert --trustedcert /var/lib/icinga2/certs/trusted-master.crt --host {{monitoring_server}}"
   args:
-    creates: /etc/icinga2/pki/trusted-master.crt
+    creates: /var/lib/icinga2/certs/trusted-master.crt
 
 - name: sign certificate
-  command: "icinga2 node setup --ticket {{ pki_ticket }} --endpoint {{monitoring_server}} --zone {{ ansible_fqdn }} --master_host {{monitoring_server}} --trustedcert /etc/icinga2/pki/trusted-master.crt --accept-commands --accept-config --cn {{ ansible_fqdn }}"
+  command: "icinga2 node setup --ticket {{ pki_ticket }} --endpoint {{monitoring_server}} --zone {{ ansible_fqdn }} --master_host {{monitoring_server}} --trustedcert /var/lib/icinga2/certs/trusted-master.crt --accept-commands --accept-config --cn {{ ansible_fqdn }}"
   notify:
     - restart icinga2
 
@@ -30,8 +30,8 @@
       object Zone "global-templates" {
         global = true
       }
-   notify:
-     - restart icinga2
+  notify:
+    - restart icinga2
 
 - name: Remove include from icinga2.conf
   lineinfile:
