@@ -120,7 +120,7 @@
     creates: /var/lib/graphite/graphite.db
   register: graphite_syncdb
   failed_when: "'ERROR' in graphite_syncdb.stdout"
-  changed_when: "'No migrations to apply.' not in graphite_syncdb.stdout"
+  changed_when: "'No migrations to apply.' not in graphite_syncdb.stdout and 'graphite.db exists' not in graphite_syncdb.stdout"
   become_user: _graphite
   notify:
     - restart apache2
