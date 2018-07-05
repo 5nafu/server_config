@@ -1,11 +1,11 @@
 - name: Add debmon Key
   apt_key:
-    url: https://debmon.org/debmon/repo.key
+    url: https://packages.icinga.com/icinga.key
     state: present
 
 - name: Add debmon repository
   apt_repository:
-    repo: "deb https://debmon.org/debmon debmon-{{ ansible_distribution_release}} main"
+    repo: "deb http://packages.icinga.com/debian icinga-{{ ansible_distribution_release}} main"
     state: present
     update_cache: yes
 
@@ -30,6 +30,6 @@
   iptables_raw:
     name: allow_icinga_api
     weight: 50
-    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
+    keep_unmanaged: yes
     state: present
     rules: "-A INPUT -p tcp -m tcp --dport 5665 -j ACCEPT"

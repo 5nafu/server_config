@@ -11,7 +11,7 @@
   args:
     creates: "/etc/icinga2/pki/{{ ansible_fqdn }}.key"
   notify:
-    - register icinga2
+    - restart icinga2
 
 - name: get Master-Server cert
   command: "icinga2 pki save-cert --trustedcert /etc/icinga2/pki/trusted-master.crt --host {{monitoring_server}}"
@@ -30,8 +30,8 @@
       object Zone "global-templates" {
         global = true
       }
-  notify:
-    - restart icinga2
+   notify:
+     - restart icinga2
 
 - name: Remove include from icinga2.conf
   lineinfile:
