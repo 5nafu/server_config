@@ -6,3 +6,6 @@
   service: name=apache2 state=restarted
 - name: restart fail2ban
   service: name=fail2ban state=restarted
+- name: Reconfigure Timezone Data
+  command: dpkg-reconfigure -f noninteractive tzdata
+  become: true
