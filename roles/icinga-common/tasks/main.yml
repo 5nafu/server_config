@@ -41,6 +41,6 @@
   iptables_raw:
     name: allow_icinga_api
     weight: 50
-    keep_unmanaged: yes
+    keep_unmanaged: '{{ iptables_keep_unmanaged }}'
     state: present
     rules: "-A INPUT -p tcp -m tcp --dport 5665 -j ACCEPT"
