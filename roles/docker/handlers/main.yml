@@ -2,5 +2,5 @@
   service: name=docker state=restarted
 
 - name: restart docker-compose
-  command: docker-compose -f srv/docker/services.yml up -d
+  command: docker-compose -f /srv/docker/services.yml up -d
   become: true
