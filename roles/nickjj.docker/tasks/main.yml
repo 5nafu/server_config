@@ -88,6 +88,14 @@
 - set_fact: docker_compose_version="{{ composerelease.json.name }}"
   when: docker_install_docker_compose
 
+
+- name: Check if docker-compose is installed and current
+  command: docker-compose version --short
+  register: docker_compose_check_version
+  ignore_errors: yes
+  changed_when: "'{{docker_compose_version}}' not in '{{docker_compose_check_version.stdout}}' or docker_compose_check_version.rc > 0"
+  when: docker_install_docker_compose
+
 - name: Install Docker Compose
   get_url:
     url: "https://github.com/docker/compose/releases/download/{{ docker_compose_version }}/docker-compose-Linux-x86_64"
@@ -96,7 +104,7 @@
     owner: "root"
     group: "root"
     mode: "0755"
-  when: docker_install_docker_compose
+  when: docker_install_docker_compose and docker_compose_check_version.changed
 
 - name: Create cron tasks for Docker commands
   cron:
