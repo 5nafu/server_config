@@ -1,0 +1,5 @@
+PATH="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"
+PUID=999
+PGID=999
+TZ="Europe/Berlin"
+USERDIR="/srv/docker"

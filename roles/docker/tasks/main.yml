@@ -1,0 +1,31 @@
+---
+- name: Add docker Account
+  user:
+    name: docker
+    comment: "Docker User"
+    append: no
+    group: docker
+    shell: /bin/false
+    system: yes
+    uid: 999
+    home: /srv/docker
+
+- name: Ensure Environment is set
+  copy:
+    dest: /etc/environment
+    group: root
+    mode: 0644
+    owner: root
+    src: environment
+  notify:
+    - restart docker-compose
+
+- name: Ensure docker compose is current
+  copy:
+    dest: /srv/docker/services.yml
+    group: docker
+    mode: 0644
+    owner: docker
+    src: services.yml
+  notify:
+    - restart docker-compose
