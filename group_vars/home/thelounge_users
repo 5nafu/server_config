@@ -1,0 +1,21 @@
+---
+thelounge_users:
+  snafu:
+    password: $2a$11$hEUunF1/kDvlkgKus0n9GOWpGYlOXseHI5mJqyBadWF4lZvnNE8oy
+    log: true
+    awayMessage: ''
+    networks: 
+      - awayMessage: ''
+        nick: snafu
+        name: Freenode
+        host: chat.freenode.net
+        port: 6697
+        tls: true
+        password: VarthIc6
+        username: snafu
+        realname: snafu
+        commands: []
+        ip: 192.168.1.2
+        hostname: null
+        channels: []
+    sessions: {}

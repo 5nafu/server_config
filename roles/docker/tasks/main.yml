@@ -20,6 +20,8 @@
   notify:
     - restart docker-compose
 
+- include: thelounge_preparation.yml
+
 - name: Ensure docker compose is current
   copy:
     dest: /srv/docker/services.yml

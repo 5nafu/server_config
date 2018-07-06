@@ -1,0 +1,22 @@
+---
+- name: Ensure user directory
+  file:
+    path: "{{ item }}"
+    group: docker
+    state: directory
+    mode: 06770
+    owner: docker
+  with_items:
+    - /srv/docker/docker
+    - /srv/docker/docker/thelounge
+    - /srv/docker/docker/thelounge/data
+    - /srv/docker/docker/thelounge/data/users/
+
+- name: Ensure user configuration
+  copy:
+    dest: "/srv/docker/docker/thelounge/data/users/{{ item.key }}.json"
+    content: "{{ item.value | to_nice_json(indent=8) }}"
+    group: docker
+    mode: 06770
+    owner: docker
+  with_dict: "{{ thelounge_users }}"
