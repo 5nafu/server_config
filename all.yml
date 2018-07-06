@@ -21,3 +21,6 @@
   roles:
     - { role: 'mysql', tags: 'froxlor' }
     - { role: 'froxlor', tags: 'froxlor' }
+- hosts: home
+  roles:
+    - { role: "docker", tags: "docker" }
