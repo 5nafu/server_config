@@ -15,6 +15,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     command: --schedule "0 0 4 * * *" --cleanup
+    user: 999:999
 
 #Portainer - WebUI for Containers
   portainer:
@@ -30,6 +31,7 @@ services:
       - ${USERDIR}/docker/shared:/shared
     environment:
       - TZ=${TZ}
+    user: 999:999
 
 ######### APPLICATIONS ##########
   thelounge:
@@ -40,3 +42,4 @@ services:
          - 9000:9000
       volumes:
         - ${USERDIR}/docker/thelounge/data:/home/lounge/data
+      user: 999:999
